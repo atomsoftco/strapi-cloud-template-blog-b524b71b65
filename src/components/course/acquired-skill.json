@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_course_acquired_skills",
+  "info": {
+    "displayName": "Acquired Skill",
+    "icon": "Star"
+  },
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}

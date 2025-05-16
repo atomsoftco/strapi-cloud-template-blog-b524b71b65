@@ -26,13 +26,19 @@
       "allowedTypes": ["images"]
     },
     "learningPoints": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "course.learning-point"
     },
     "acquiredSkills": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "course.acquired-skill"
     },
     "faqs": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "course.faq"
     },
     "availableDates": {
       "type": "json"

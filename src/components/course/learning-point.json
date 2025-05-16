@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_course_learning_points",
+  "info": {
+    "displayName": "Learning Point",
+    "icon": "Check"
+  },
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}

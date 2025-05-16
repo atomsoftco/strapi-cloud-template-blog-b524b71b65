@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_course_faqs",
+  "info": {
+    "displayName": "FAQ",
+    "icon": "Help"
+  },
+  "attributes": {
+    "question": {
+      "type": "string"
+    },
+    "answer": {
+      "type": "text"
+    }
+  }
+}
