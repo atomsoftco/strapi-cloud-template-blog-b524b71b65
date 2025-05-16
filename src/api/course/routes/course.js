@@ -1,24 +1,9 @@
 'use strict';
 
-module.exports = {
-  routes: [
-    {
-      method: 'GET',
-      path: '/courses',
-      handler: 'course.find',
-      config: {
-        policies: [],
-        middlewares: [],
-      },
-    },
-    {
-      method: 'GET',
-      path: '/courses/:id',
-      handler: 'course.findOne',
-      config: {
-        policies: [],
-        middlewares: [],
-      },
-    },
-  ],
-};
+/**
+ * author router.
+ */
+
+const { createCoreRouter } = require('@strapi/strapi').factories;
+
+module.exports = createCoreRouter('api::course.course');
