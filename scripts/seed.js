@@ -3,7 +3,14 @@
 const fs = require('fs-extra');
 const path = require('path');
 const mime = require('mime-types');
-const { categories, authors, articles, global, about } = require('../data/data.json');
+const {
+  categories,
+  authors,
+  articles,
+  global,
+  about,
+  courses,
+} = require('../data/data.json');
 
 async function seedExampleApp() {
   const shouldImportSeedData = await isFirstRun();
@@ -37,11 +44,13 @@ async function isFirstRun() {
 
 async function setPublicPermissions(newPermissions) {
   // Find the ID of the public role
-  const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
-    where: {
-      type: 'public',
-    },
-  });
+  const publicRole = await strapi
+    .query('plugin::users-permissions.role')
+    .findOne({
+      where: {
+        type: 'public',
+      },
+    });
 
   // Create the new permissions and link them to the public role
   const allPermissionsToCreate = [];
@@ -150,7 +159,9 @@ async function updateBlocks(blocks) {
       updatedBlocks.push(blockCopy);
     } else if (block.__component === 'shared.slider') {
       // Get files already uploaded to Strapi or upload new files
-      const existingAndUploadedFiles = await checkFileExistsBeforeUpload(block.files);
+      const existingAndUploadedFiles = await checkFileExistsBeforeUpload(
+        block.files
+      );
       // Copy the block to not mutate directly
       const blockCopy = { ...block };
       // Replace the file names on the block with the actual files
@@ -236,6 +247,41 @@ async function importAuthors() {
   }
 }
 
+async function importCourses() {
+  for (const course of courses) {
+    // Transform arrays to repeatable component format
+    const learningPoints = (course.learningPoints || []).map((value) => ({
+      value,
+    }));
+    const acquiredSkills = (course.acquiredSkills || []).map((value) => ({
+      value,
+    }));
+    const faqs = (course.faqs || []).map((faq) => ({
+      question: faq.question,
+      answer: faq.answer,
+    }));
+
+    // Handle image upload if image is present
+    let image = null;
+    if (course.image) {
+      image = await checkFileExistsBeforeUpload([path.basename(course.image)]);
+    }
+
+    await createEntry({
+      model: 'course',
+      entry: {
+        ...course,
+        image,
+        learningPoints,
+        acquiredSkills,
+        faqs,
+        // Make sure it's not a draft
+        publishedAt: Date.now(),
+      },
+    });
+  }
+}
+
 async function importSeedData() {
   // Allow read of application content types
   await setPublicPermissions({
@@ -244,6 +290,7 @@ async function importSeedData() {
     author: ['find', 'findOne'],
     global: ['find', 'findOne'],
     about: ['find', 'findOne'],
+    course: ['find', 'findOne'],
   });
 
   // Create all entries
@@ -252,6 +299,7 @@ async function importSeedData() {
   await importArticles();
   await importGlobal();
   await importAbout();
+  await importCourses();
 }
 
 async function main() {
